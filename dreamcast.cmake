@@ -115,10 +115,22 @@ endfunction()
 
 ### Function to Enable SH4 Math Optimizations ###
 function(enable_sh4_math)
-  if(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER_EQUAL 4.8.0)
-    message(INFO " Enabling SH4 Math Optimizations ${GCC_FLAGS_AVAILABLE}")
-    add_compile_options("-mfsrra;-mfsca")
+  message(INFO " Enabling SH4 Math Optimizations")
+  
+  include(CheckCCompilerFlag)
+  check_c_compiler_flag("-mfsrra" COMPILER_HAS_FSRRA)
+  check_c_compiler_flag("-mfsca"  COMPILER_HAS_FSCA)
+  if(COMPILER_HAS_FSRRA)
+    add_compile_options(-mfsrra)
   else()
-    message(WARN " Must have GCC4.8 or later for -mfsrra -mfsca to be enabled")
+    message(WARN " Must have GCC4.8 or later for -mfsrra to be enabled")
   endif()
+
+  if(COMPILER_HAS_FSCA)
+    add_compile_options(-mfsca)
+  else()
+    message(WARN " Must have GCC4.8 or later for -mfsca to be enabled")
+  endif()
+
+  add_compile_options(-ffast-math)
 endfunction()
