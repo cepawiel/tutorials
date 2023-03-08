@@ -9,3 +9,4 @@
 *.img
 .DS_Store
 .keepme
+build/*

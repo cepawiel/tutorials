@@ -1,5 +1,8 @@
 #include <kos.h>
 
+// Should add this to <kos.h> would expect it to exist there
+#include <dc/sound/sound.h>
+
 #define LEFT 0
 #define CENTER 128
 #define RIGHT 255
