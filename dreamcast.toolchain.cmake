@@ -111,14 +111,12 @@ INCLUDE_DIRECTORIES(
 set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_SYSTEM_LIBRARY_PATH} $ENV{KOS_BASE}/addons/lib/dreamcast $ENV{KOS_PORTS}/lib")
 
 if($ENV{KOS_SUBARCH} MATCHES naomi)
-    set(START_ADDRESS "0x8c020000")
-    set(LINKER_FILE   "$ENV{KOS_BASE}/utils/ldscripts/shlelf-naomi.xc")
+  add_link_options(-Wl,-Ttext=0x8c020000 -T$ENV{KOS_BASE}/utils/ldscripts/shlelf-naomi.xc)
 else()
-    set(START_ADDRESS "0x8c010000")
-    set(LINKER_FILE   "$ENV{KOS_BASE}/utils/ldscripts/shlelf.xc")
+  add_link_options(-Wl,-Ttext=0x8c010000 -T$ENV{KOS_BASE}/utils/ldscripts/shlelf.xc)
 endif()
 
-set(CMAKE_EXE_LINKER_FLAGS " -ml -m4-single-only -Wl,-Ttext=${START_ADDRESS} -Wl,--gc-sections -T${LINKER_FILE} -nodefaultlibs" CACHE INTERNAL "" FORCE)
+add_link_options(-ml -m4-single-only -Wl,--gc-sections -nodefaultlibs)
 
 LINK_DIRECTORIES(
     $ENV{KOS_BASE}/lib/dreamcast
