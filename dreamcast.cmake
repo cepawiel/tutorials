@@ -115,6 +115,11 @@ endfunction()
 
 ### Function to Enable SH4 Math Optimizations ###
 function(enable_sh4_math)
+  if(NOT ${PLATFORM_DREAMCAST})
+    message(WARN " PLATFORM_DREAMCAST not set, skipping SH4 Math flags")
+    return()
+  endif()
+
   message(INFO " Enabling SH4 Math Optimizations")
   
   include(CheckCCompilerFlag)
