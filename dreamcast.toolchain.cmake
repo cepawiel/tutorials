@@ -39,18 +39,22 @@ set(__KOS_TOOLCHAIN_FILE_VAR__ TRUE)
 if(NOT DEFINED ENV{KOS_BASE})
   message(FATAL_ERROR "Environment Variable KOS_BASE not set")
 endif()
+set(KOS_BASE $ENV{KOS_BASE})
 
 if(NOT DEFINED ENV{KOS_CC_BASE})
   message(FATAL_ERROR "Environment Variable KOS_CC_BASE not set")
 endif()
+set(KOS_CC_BASE $ENV{KOS_CC_BASE})
 
 if(NOT DEFINED ENV{KOS_SUBARCH})
-  message(FATAL_ERROR "Environment Variable KOS_CC_BASE not set")
+  message(FATAL_ERROR "Environment Variable KOS_SUBARCH not set")
 endif()
+set(KOS_SUBARCH $ENV{KOS_SUBARCH})
 
 if(NOT DEFINED ENV{KOS_PORTS})
-  message(FATAL_ERROR "Environment Variable KOS_CC_BASE not set")
+  message(FATAL_ERROR "Environment Variable KOS_PORTS not set")
 endif()
+set(KOS_PORTS $ENV{KOS_PORTS})
 
 ##### Configure CMake System #####
 set(CMAKE_SYSTEM_NAME Generic-ELF)
@@ -60,8 +64,8 @@ set(PLATFORM_DREAMCAST TRUE)
 
 ##### Configure Cross-Compiler #####
 set(CMAKE_CROSSCOMPILING TRUE)
-set(CMAKE_C_COMPILER $ENV{KOS_CC_BASE}/bin/sh-elf-gcc)
-set(CMAKE_CXX_COMPILER $ENV{KOS_CC_BASE}/bin/sh-elf-g++)
+set(CMAKE_C_COMPILER ${KOS_CC_BASE}/bin/sh-elf-gcc)
+set(CMAKE_CXX_COMPILER ${KOS_CC_BASE}/bin/sh-elf-g++)
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 
@@ -74,7 +78,7 @@ ADD_DEFINITIONS(
     -D_arch_dreamcast
 )
 
-if($ENV{KOS_SUBARCH} MATCHES naomi)
+if(${KOS_SUBARCH} MATCHES naomi)
     ADD_DEFINITONS(
         -D__NAOMI__
         -D_arch_sub_naomi
@@ -98,31 +102,31 @@ set(CMAKE_ASM_FLAGS "")
 set(CMAKE_ASM_FLAGS_RELEASE "")
 
 ##### Configure Include Directories #####
-set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_SYSTEM_INCLUDE_PATH} $ENV{KOS_BASE}/include $ENV{KOS_BASE}/kernel/arch/dreamcast/include $ENV{KOS_BASE}/addons/include $ENV{KOS_PORTS}/include")
+set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_SYSTEM_INCLUDE_PATH} ${KOS_BASE}/include ${KOS_BASE}/kernel/arch/dreamcast/include ${KOS_BASE}/addons/include ${KOS_PORTS}/include")
 
 INCLUDE_DIRECTORIES(
-    $ENV{KOS_BASE}/include
-    $ENV{KOS_BASE}/kernel/arch/dreamcast/include
-    $ENV{KOS_BASE}/addons/include
-    $ENV{KOS_PORTS}/include
+    ${KOS_BASE}/include
+    ${KOS_BASE}/kernel/arch/dreamcast/include
+    ${KOS_BASE}/addons/include
+    ${KOS_PORTS}/include
 )
 
 ##### Configure Libraries #####
-set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_SYSTEM_LIBRARY_PATH} $ENV{KOS_BASE}/addons/lib/dreamcast $ENV{KOS_PORTS}/lib")
+set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_SYSTEM_LIBRARY_PATH} ${KOS_BASE}/addons/lib/dreamcast ${KOS_PORTS}/lib")
 
-if($ENV{KOS_SUBARCH} MATCHES naomi)
-  add_link_options(-Wl,-Ttext=0x8c020000 -T$ENV{KOS_BASE}/utils/ldscripts/shlelf-naomi.xc)
+if(${KOS_SUBARCH} MATCHES naomi)
+  add_link_options(-Wl,-Ttext=0x8c020000 -T${KOS_BASE}/utils/ldscripts/shlelf-naomi.xc)
 else()
-  add_link_options(-Wl,-Ttext=0x8c010000 -T$ENV{KOS_BASE}/utils/ldscripts/shlelf.xc)
+  add_link_options(-Wl,-Ttext=0x8c010000 -T${KOS_BASE}/utils/ldscripts/shlelf.xc)
 endif()
 
 add_link_options(-ml -m4-single-only -Wl,--gc-sections -nodefaultlibs)
 
 LINK_DIRECTORIES(
-    $ENV{KOS_BASE}/lib/dreamcast
-    $ENV{KOS_BASE}/addons/lib/dreamcast
-    $ENV{KOS_PORTS}/lib
+    ${KOS_BASE}/lib/dreamcast
+    ${KOS_BASE}/addons/lib/dreamcast
+    ${KOS_PORTS}/lib
 )
 
-add_link_options(-L$ENV{KOS_BASE}/lib/dreamcast -L$ENV{KOS_BASE}/addons/lib/dreamcast -L$ENV{KOS_PORTS}/lib)
+add_link_options(-L${KOS_BASE}/lib/dreamcast -L${KOS_BASE}/addons/lib/dreamcast -L${KOS_PORTS}/lib)
 LINK_LIBRARIES(-Wl,--start-group -lstdc++ -lkallisti -lc -lgcc -Wl,--end-group m)
